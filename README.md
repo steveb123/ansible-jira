@@ -31,7 +31,7 @@ db_pass: 'password123'
 jira_version: '6.4.11'
 ```  
 
-The Jira installation files also need to be downloaded and placed into the files directory in tar.gz format. They can be obtained from https://www.atlassian.com/software/jira/download. Click 'All JIRA download options' to show the tar.gz archives.
+The Jira installation files also need to be downloaded and placed into the **files** directory in tar.gz format. They can be obtained from https://www.atlassian.com/software/jira/download. Click 'All JIRA download options' to show the tar.gz archives.
 
 Example:
 ```
