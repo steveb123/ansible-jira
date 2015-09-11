@@ -1,0 +1,6 @@
+- hosts: atlashost
+  sudo: yes
+  roles:
+    - java
+    - postgres
+    - jira

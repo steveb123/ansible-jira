@@ -1,0 +1,4 @@
+customer_name: 'steveweb'
+db_name: 'steveweb_db'
+db_pass: 'password123'
+jira_version: '6.4.11'

@@ -1,0 +1,42 @@
+---
+
+- name: Ensure /home/{{customer_name}}/jira/inst directory is present
+  file: path=/home/{{customer_name}}/jira/inst state=directory
+
+- name: Ensure /home/{{customer_name}}/jira/home directory is present
+  file: path=/home/{{customer_name}}/jira/home state=directory
+
+- name: extract jira files
+  unarchive: src=../files/atlassian-jira-{{jira_version}}.tar.gz dest=/home/{{customer_name}}/jira
+
+- name: copy jira files to inst
+  shell: cp -r /home/{{customer_name}}/jira/atlassian-jira-6.4.11-standalone/* /home/{{customer_name}}/jira/inst
+
+- name: delete tar and install files
+  shell: rm -rf /home/{{customer_name}}/jira/atlassian*
+
+- name: ensure java.home is set
+  lineinfile: dest=/home/{{customer_name}}/jira/inst/atlassian-jira/WEB-INF/classes/jira-application.properties regexp=jira.home line='jira.home =/home/{{customer_name}}/jira/home'
+
+- name: copy dbconfig.xml file to jira/home
+  copy: src=../files/dbconfig.xml dest=/home/{{customer_name}}/jira/home/
+
+- name: set database name in dbconfig.xml
+  lineinfile: dest=/home/{{customer_name}}/jira/home/dbconfig.xml regexp=<url>jdbc line='<url>jdbc:postgresql://localhost:5432/{{db_name}}</url>'
+
+- name: set username in dbconfig.xml
+  lineinfile: dest=/home/{{customer_name}}/jira/home/dbconfig.xml regexp=<username> line='<username>{{customer_name}}</username>'
+
+- name: set db password name in dbconfig.xml
+  lineinfile: dest=/home/{{customer_name}}/jira/home/dbconfig.xml regexp=<password> line='<password>{{db_pass}}</password>'
+
+- name: create user for customer to run jira
+  user: name={{customer_name}} shell=/bin/bash comment='Account for running JIRA'
+
+- name: set customer as owner of jira files
+  file: path=/home/{{customer_name}} owner={{customer_name}} group={{customer_name}} recurse=yes
+
+- name: start Jira
+  sudo_user: "{{customer_name}}"
+  shell: /home/{{customer_name}}/jira/inst/bin/start-jira.sh
+  async: 10 # had to get the task to wait for 10 secs for Jira to start
