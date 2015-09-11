@@ -1,7 +1,5 @@
 #Jira setup on Ubuntu with Ansible
 
-##Ansible
-
 The directory structure looks like this:
 ```
 |--ansible-jira
